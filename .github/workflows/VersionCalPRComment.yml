@@ -57,6 +57,8 @@ jobs:
             cat changed_files
             cat changed_files | grep azext_ | awk -F"azext_" '{print $1}'| awk -F"/" '{print $2}' | sort | uniq > changed_modules
             echo "changed_module_list=$(cat changed_files | grep azext_ | awk -F"azext_" '{print $1}'| awk -F"/" '{print $2}' | sort | uniq | xargs)" >> $GITHUB_ENV
+            git --no-pager diff --diff-filter=ACMRT ${{ env.base_branch_pre }}/${{ env.base_branch }}...${{ env.diff_branch }} > diff_codes
+            echo "pr_diff_codes=$(cat diff_codes)" >> $GITHUB_ENV
       - name: Display Diff Modules
         run: |
             for mod in ${{ env.changed_module_list }}
@@ -121,7 +123,7 @@ jobs:
            done
            ls ./${{ env.base_meta_path }}/
            ls ./${{ env.diff_meta_path }}/
-           git checkout ${{ env.base_branch_pre }}/${{ env.base_branch }}
+           # git checkout ${{ env.base_branch_pre }}/${{ env.base_branch }}
            python scripts/ci/release_version_cal.py
            # echo "commit_message=$(cat ${{ env.output_file }})" >> $GITHUB_ENV
       - name: Comment on the pull request
