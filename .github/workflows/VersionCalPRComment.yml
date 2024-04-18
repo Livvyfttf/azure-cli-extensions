@@ -139,6 +139,6 @@ jobs:
             Please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md) to update release versions.
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ steps.get_comment_message.outputs.BlockPR }}
+        if: ${{ steps.get_comment_message.outputs.BlockPR == "1" }}
         with:
           labels: do-not-merge
