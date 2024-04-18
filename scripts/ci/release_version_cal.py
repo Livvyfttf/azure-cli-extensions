@@ -28,7 +28,7 @@ pr_label_list = [name.lower().strip().strip('"').strip("'") for name in pr_label
 
 DEFAULT_VERSION = "0.0.0"
 INIT_RELEASE_VERSION = "1.0.0b1"
-block_pr = False
+block_pr = 0
 
 cli_ext_path = get_ext_repo_paths()[0]
 print("get_cli_repo_path: ", get_cli_repo_path())
@@ -200,27 +200,27 @@ def gen_comment_message(mod, mod_update_info, comment_message):
         comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-"), mod))
     else:
         if mod_update_info.get("version", "-") != mod_update_info["version_diff"]:
-            block_pr = True
+            block_pr = 1
             comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-")))
 
     if mod_update_info.get("preview_tag", None) == "add":
         if mod_update_info.get("preview_tag_diff", None):
             if mod_update_info["preview_tag_diff"] != "add":
-                block_pr = True
+                block_pr = 1
                 comment_message.append(' - :warning: Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
             comment_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
     if mod_update_info.get("preview_tag", None) == "remove":
         if mod_update_info.get("preview_tag_diff", None):
             if mod_update_info["preview_tag_diff"] != "remove":
-                block_pr = True
+                block_pr = 1
                 comment_message.append(' - :warning: Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
             comment_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
     if mod_update_info.get("exp_tag", None) == "remove":
         if mod_update_info.get("exp_tag_diff", None):
             if mod_update_info["exp_tag_diff"] != "remove":
-                block_pr = True
+                block_pr = 1
                 comment_message.append(' - :warning: Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
             comment_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
