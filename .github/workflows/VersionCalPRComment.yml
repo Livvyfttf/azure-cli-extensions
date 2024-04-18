@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   version-cal:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-cal-version') }}
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-cal-version') }} && ${{ github.event.label.name != "do-not-merge" }}
     runs-on: ubuntu-latest
     steps:
       - name: Set Init Version Message
@@ -137,6 +137,10 @@ jobs:
             version_update.txt
            message-failure: |
             Please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md) to update release versions.
+      - name: Check output
+        run: |
+           echo steps.get_comment_message.outputs.BlockPR
+           echo ${{ steps.get_comment_message.outputs.BlockPR }}
       - name: add label
         uses: actions-ecosystem/action-add-labels@v1
         if: ${{ steps.get_comment_message.outputs.BlockPR }}  == "1"
