@@ -20,8 +20,11 @@ diff_meta_path = os.environ.get('diff_meta_path', None)
 output_file = os.environ.get('output_file', None)
 
 changed_module_list = os.environ.get('changed_module_list', "").split()
-diff_codes = os.environ.get('pr_diff_codes', "")
-print("diff_codes:")
+diff_code_file = os.environ.get('diff_code_file', "")
+print("diff_code_file:", diff_code_file)
+with open(diff_code_file, "r") as f:
+  for line in f:
+    print(line)
 
 pr_label_list = os.environ.get('pr_label_list', "").split()
 pr_label_list = [name.lower().strip().strip('"').strip("'") for name in pr_label_list]
