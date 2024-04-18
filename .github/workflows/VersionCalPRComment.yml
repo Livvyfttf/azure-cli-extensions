@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   version-cal:
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) || github.event.label.name != 'do-not-merge' }}
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-cal-version') && (!contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) || github.event.label.name != 'do-not-merge') }}
     runs-on: ubuntu-latest
     steps:
       - name: Set Init Version Message
