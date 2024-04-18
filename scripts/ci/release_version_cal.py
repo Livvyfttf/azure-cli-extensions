@@ -142,17 +142,18 @@ def extract_module_version_info(mod_update_info, mod):
                                         next_version_segment_tag=next_version_segment_tag)
     mod_update_info.update(next_version)
 
-def fill_module_update_info(mod_update_info):
+def fill_module_update_info(mods_update_info):
     for mod in changed_module_list:
         update_info = {}
         extract_module_history_update_info(update_info, mod)
-        print(mod_update_info)
+        print(update_info)
         extract_module_version_update_info(update_info, mod)
-        print(mod_update_info)
+        print(update_info)
         # extract_module_metadata_update_info(update_info, mod)
         extract_module_version_info(update_info, mod)
-        mod_update_info[mod] = update_info
-    print(mod_update_info)
+        mods_update_info[mod] = update_info
+    print("mods_update_info")
+    print(mods_update_info)
 
 def get_module_metadata_of_max_version(mod):
     if mod not in get_index_data()['extensions']:
@@ -254,18 +255,18 @@ def main():
     print("changed_module_list: ", changed_module_list)
     print("pr_label_list: ", pr_label_list)
     comment_message = []
-    module_update_info = {}
+    modules_update_info = {}
     if len(changed_module_list) == 0:
         comment_message.append("For more info about extension versioning, please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md)")
         save_comment_message(cli_ext_path, output_file, comment_message)
         return
-    fill_module_update_info(module_update_info)
-    if len(module_update_info) == 0:
+    fill_module_update_info(modules_update_info)
+    if len(modules_update_info) == 0:
         comment_message.append("For more info about extension versioning, please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md)")
         save_comment_message(cli_ext_path, output_file, comment_message)
         return
     add_suggest_header(comment_message)
-    for mod, update_info in module_update_info.items():
+    for mod, update_info in modules_update_info.items():
         gen_comment_message(mod, update_info, comment_message)
     add_label_hint_message(comment_message)
     print("comment_message:")
