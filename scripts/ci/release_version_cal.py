@@ -100,8 +100,8 @@ def extract_module_metadata_update_info(mod_update_info, mod):
                 if isexp_remove_match and len(isexp_remove_match):
                     mod_update_info["exp_tag_diff"] = "remove"
             else:
-                mod_setup_update_match = re.findall(module_setup_update_pattern, line)
-                if mod_setup_update_match:
+                module_meta_update_pattern = re.findall(module_meta_update_pattern, line)
+                if module_meta_update_pattern:
                     mod_update_info["meta_updated"] = True
 
 def extract_module_version_info(mod_update_info, mod):
