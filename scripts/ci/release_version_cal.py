@@ -6,6 +6,7 @@
 # --------------------------------------------------------------------------------------------
 # pylint: disable=line-too-long
 import os
+import re
 from packaging.version import parse
 
 from azdev.utilities.path import get_cli_repo_path, get_ext_repo_paths
@@ -27,6 +28,7 @@ pr_label_list = [name.lower().strip().strip('"').strip("'") for name in pr_label
 
 DEFAULT_VERSION = "0.0.0"
 INIT_RELEASE_VERSION = "1.0.0b1"
+block_pr = False
 
 
 def extract_module_history_update_info(mod_update_info, mod):
@@ -192,23 +194,27 @@ def gen_comment_message(mod, mod_update_info, comment_message):
         comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-"), mod))
     else:
         if mod_update_info.get("version", "-") != mod_update_info["version_diff"]:
+            block_pr = True
             comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-")))
 
     if mod_update_info.get("preview_tag", None) == "add":
         if mod_update_info.get("preview_tag_diff", None):
             if mod_update_info["preview_tag_diff"] != "add":
+                block_pr = True
                 comment_message.append(' - :warning: Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
             comment_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
     if mod_update_info.get("preview_tag", None) == "remove":
         if mod_update_info.get("preview_tag_diff", None):
             if mod_update_info["preview_tag_diff"] != "remove":
+                block_pr = True
                 comment_message.append(' - :warning: Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
             comment_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
     if mod_update_info.get("exp_tag", None) == "remove":
         if mod_update_info.get("exp_tag_diff", None):
             if mod_update_info["exp_tag_diff"] != "remove":
+                block_pr = True
                 comment_message.append(' - :warning: Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
             comment_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
@@ -228,6 +234,9 @@ def save_comment_message(cli_ext_path, file_name, comment_message):
         for line in comment_message:
             f.write(line + "\n")
 
+def save_gh_output():
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+        print(f'BlockPR={block_pr}', file=fh)
 
 def main():
     print("Start calculate release version ...\n")
@@ -254,8 +263,11 @@ def main():
     for mod, update_info in module_update_info.items():
         gen_comment_message(mod, update_info, comment_message)
     add_label_hint_message(comment_message)
+    print("comment_message:")
     print(comment_message)
+    print("block_pr:", block_pr)
     save_comment_message(cli_ext_path, output_file, comment_message)
+    save_gh_output()
 
 
 if __name__ == '__main__':
