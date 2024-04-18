@@ -93,7 +93,6 @@ def extract_module_metadata_update_info(mod_update_info, mod):
     module_isexp_remove_pattern = re.compile(r"\-.*?azext.isExperimental.*?true")
     with open(diff_code_file, "r") as f:
         for line in f:
-            line = line.strip()
             if mod_update_info["meta_updated"]:
                 if line.find("---") != -1:
                     break
@@ -110,7 +109,6 @@ def extract_module_metadata_update_info(mod_update_info, mod):
                 if isexp_remove_match and len(isexp_remove_match):
                     mod_update_info["exp_tag_diff"] = "remove"
             else:
-                print(line)
                 module_meta_update_pattern = re.findall(module_meta_update_pattern, line)
                 if module_meta_update_pattern:
                     mod_update_info["meta_updated"] = True
@@ -154,7 +152,8 @@ def fill_module_update_info(mods_update_info):
         print(update_info)
         extract_module_version_update_info(update_info, mod)
         print(update_info)
-        # extract_module_metadata_update_info(update_info, mod)
+        extract_module_metadata_update_info(update_info, mod)
+        print(update_info)
         extract_module_version_info(update_info, mod)
         mods_update_info[mod] = update_info
     print("mods_update_info")
@@ -201,37 +200,40 @@ def add_suggest_header(comment_message):
 
 
 def gen_comment_message(mod, mod_update_info, comment_message):
-    comment_message.append("### Module: {0}".format(mod))
+    mod_message = []
     if not mod_update_info["history_updated"]:
-        comment_message.append(" - :warning: Please log updates into to `src/{0}/HISTORY.rst`".format(mod))
+        mod_message.append(" - :warning: Please log updates into to `src/{0}/HISTORY.rst`".format(mod))
     if not mod_update_info["setup_updated"]:
-        comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
+        mod_message.append(" - Update `VERSION` to `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
     else:
         if mod_update_info.get("version", "-") != mod_update_info.get("version_diff", "-"):
             block_pr = 1
-            comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
+            mod_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
 
     if mod_update_info.get("preview_tag", None) == "add":
         if mod_update_info.get("preview_tag_diff", None):
             if mod_update_info["preview_tag_diff"] != "add":
                 block_pr = 1
-                comment_message.append(' - :warning: Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
+                mod_message.append(' - :warning: Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
-            comment_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
+            mod_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
     if mod_update_info.get("preview_tag", None) == "remove":
         if mod_update_info.get("preview_tag_diff", None):
             if mod_update_info["preview_tag_diff"] != "remove":
                 block_pr = 1
-                comment_message.append(' - :warning: Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
+                mod_message.append(' - :warning: Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
-            comment_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
+            mod_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
     if mod_update_info.get("exp_tag", None) == "remove":
         if mod_update_info.get("exp_tag_diff", None):
             if mod_update_info["exp_tag_diff"] != "remove":
                 block_pr = 1
-                comment_message.append(' - :warning: Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
+                mod_message.append(' - :warning: Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
         else:
-            comment_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
+            mod_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
+    if len(mod_message):
+        comment_message.append("### Module: {0}".format(mod))
+        comment_message += mod_message
 
 def add_label_hint_message(comment_message):
     comment_message.append("#### Notes")
