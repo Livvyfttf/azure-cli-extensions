@@ -30,6 +30,9 @@ DEFAULT_VERSION = "0.0.0"
 INIT_RELEASE_VERSION = "1.0.0b1"
 block_pr = False
 
+cli_ext_path = get_ext_repo_paths()[0]
+print("get_cli_repo_path: ", get_cli_repo_path())
+print("get_ext_repo_paths: ", cli_ext_path)
 
 def extract_module_history_update_info(mod_update_info, mod):
     """
@@ -243,9 +246,6 @@ def save_gh_output():
 
 def main():
     print("Start calculate release version ...\n")
-    cli_ext_path = get_ext_repo_paths()[0]
-    print("get_cli_repo_path: ", get_cli_repo_path())
-    print("get_ext_repo_paths: ", cli_ext_path)
     print("base_meta_path: ", base_meta_path)
     print("diff_meta_path: ", diff_meta_path)
     print("output_file: ", output_file)
