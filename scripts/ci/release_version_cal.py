@@ -144,7 +144,7 @@ def fill_module_update_info(mod_update_info):
         update_info = {}
         extract_module_history_update_info(update_info, mod)
         extract_module_version_update_info(update_info, mod)
-        extract_module_metadata_update_info(update_info, mod)
+        # extract_module_metadata_update_info(update_info, mod)
         extract_module_version_info(update_info, mod)
         mod_update_info[mod] = update_info
     print(mod_update_info)
