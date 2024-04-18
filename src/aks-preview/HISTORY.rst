@@ -2,6 +2,8 @@
 
 Release History
 ===============
+* release comments
+
 
 Guidance
 ++++++++
