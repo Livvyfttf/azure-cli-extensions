@@ -61,12 +61,15 @@ def extract_module_version_update_info(mod_update_info, mod):
     module_setup_update_pattern = re.compile(r"\+\+\+.*?src/%s/setup.py"%mod)
     module_version_update_pattern = re.compile(r"\+.*?VERSION.*?\=.*?\'([0-9\.\b]+)\'")
     print("module_setup_update_pattern: ", module_setup_update_pattern)
+    print("module_version_update_pattern: ", module_version_update_pattern)
     with open(diff_code_file, "r") as f:
         for line in f:
             if mod_update_info["setup_updated"]:
                 if line.find("---") != -1:
                     break
                 mod_version_update_match = re.findall(module_version_update_pattern, line)
+                print("line: ", line)
+                print("mod_version_update_match: ", mod_version_update_match)
                 if mod_version_update_match and len(mod_version_update_match) == 1:
                     mod_update_info["version_diff"] = mod_version_update_match[0]
             else:
@@ -207,7 +210,7 @@ def gen_comment_message(mod, mod_update_info, comment_message):
     else:
         if mod_update_info.get("version", "-") != mod_update_info.get("version_diff", "-"):
             block_pr = 1
-            comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-")))
+            comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
 
     if mod_update_info.get("preview_tag", None) == "add":
         if mod_update_info.get("preview_tag_diff", None):
