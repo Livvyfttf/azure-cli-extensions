@@ -203,11 +203,11 @@ def gen_comment_message(mod, mod_update_info, comment_message):
     if not mod_update_info["history_updated"]:
         comment_message.append(" - :warning: Please log updates into to `src/{0}/HISTORY.rst`".format(mod))
     if not mod_update_info["setup_updated"]:
-        comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-"), mod))
+        comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
     else:
-        if mod_update_info.get("version", "-") != mod_update_info["version_diff"]:
+        if mod_update_info.get("version", "-") != mod_update_info.get("version_diff", "-"):
             block_pr = 1
-            comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-")))
+            comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-")))
 
     if mod_update_info.get("preview_tag", None) == "add":
         if mod_update_info.get("preview_tag_diff", None):
