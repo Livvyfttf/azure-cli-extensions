@@ -22,16 +22,127 @@ output_file = os.environ.get('output_file', None)
 changed_module_list = os.environ.get('changed_module_list', "").split()
 diff_code_file = os.environ.get('diff_code_file', "")
 print("diff_code_file:", diff_code_file)
-with open(diff_code_file, "r") as f:
-  for line in f:
-    print(line)
-
 pr_label_list = os.environ.get('pr_label_list', "").split()
 pr_label_list = [name.lower().strip().strip('"').strip("'") for name in pr_label_list]
 
 DEFAULT_VERSION = "0.0.0"
 INIT_RELEASE_VERSION = "1.0.0b1"
 
+
+def extract_module_history_update_info(mod_update_info, mod):
+    """
+    --- a/src/monitor-control-service/HISTORY.rst
+    +++ b/src/monitor-control-service/HISTORY.rst
+    """
+    mod_update_info["history_updated"] = False
+    module_history_update_pattern = re.compile(r"\+{3}*?src/%s/HISTORY.rst"%mod)
+    with open(diff_code_file, "r") as f:
+        for line in f:
+            mod_history_update_match = re.findall(module_history_update_pattern, line)
+            if mod_history_update_match:
+                mod_update_info["history_updated"] = True
+
+def extract_module_version_update_info(mod_update_info, mod):
+    """
+    --- a/src/monitor-control-service/setup.py
+    +++ b/src/monitor-control-service/setup.py
+    -VERSION = '1.0.1'
+    +VERSION = '1.1.1'
+    --- a/src/monitor-control-service/HISTORY.RST
+    """
+    mod_update_info["setup_updated"] = False
+    module_setup_update_pattern = re.compile(r"\+{3}*?src/%s/setup.py"%mod)
+    module_version_update_pattern = re.compile(r"\+*?VERSION*?\=*?\'([0-9\.\b]+)\'")
+    with open(diff_code_file, "r") as f:
+        for line in f:
+            if mod_update_info["setup_updated"]:
+                if line.find("---") != -1:
+                    break
+                mod_version_update_match = re.findall(module_version_update_pattern, line)
+                if mod_version_update_match and len(mod_version_update_match) == 1:
+                    mod_update_info["version_diff"] = mod_version_update_match[0]
+            else:
+                mod_setup_update_match = re.findall(module_setup_update_pattern, line)
+                if mod_setup_update_match:
+                    mod_update_info["setup_updated"] = True
+
+def extract_module_metadata_update_info(mod_update_info, mod):
+    """
+    --- a/src/monitor-control-service/azext_amcs/azext_metadata.json
+    +++ b/src/monitor-control-service/azext_amcs/azext_metadata.json
+    -    "azext.isPreview": true
+    +    "azext.isPreview": true
+    --- a/src/monitor-control-service/HISTORY.RST
+    """
+    mod_update_info["meta_updated"] = False
+    module_meta_update_pattern = re.compile(r"\+{3}*?src/%s/azext_*?/azext_metadata.json"%mod)
+    module_ispreview_add_pattern = re.compile(r"\-*?azext.isPreview*?true")
+    module_ispreview_remove_pattern = re.compile(r"\-*?azext.isPreview*?true")
+    module_isexp_add_pattern = re.compile(r"\+*?azext.isExperimental*?true")
+    module_isexp_remove_pattern = re.compile(r"\-*?azext.isExperimental*?true")
+    with open(diff_code_file, "r") as f:
+        for line in f:
+            if mod_update_info["meta_updated"]:
+                if line.find("---") != -1:
+                    break
+                ispreview_add_match = re.findall(module_ispreview_add_pattern, line)
+                if ispreview_add_match and len(ispreview_add_match):
+                    mod_update_info["preview_tag_diff"] = "add"
+                ispreview_remove_match = re.findall(module_ispreview_remove_pattern, line)
+                if ispreview_remove_match and len(ispreview_remove_match):
+                    mod_update_info["preview_tag_diff"] = "remove"
+                isexp_add_match = re.findall(module_isexp_add_pattern, line)
+                if isexp_add_match and len(isexp_add_match):
+                    mod_update_info["exp_tag_diff"] = "add"
+                isexp_remove_match = re.findall(module_isexp_remove_pattern, line)
+                if isexp_remove_match and len(isexp_remove_match):
+                    mod_update_info["exp_tag_diff"] = "remove"
+            else:
+                mod_setup_update_match = re.findall(module_setup_update_pattern, line)
+                if mod_setup_update_match:
+                    mod_update_info["meta_updated"] = True
+
+def extract_module_version_info(mod_update_info, mod):
+    next_version_pre_tag = get_next_version_pre_tag()
+    next_version_segment_tag = get_next_version_segment_tag()
+    print("next_version_pre_tag: ", next_version_pre_tag)
+    print("next_version_segment_tag: ", next_version_segment_tag)
+    base_meta_file = os.path.join(cli_ext_path, base_meta_path, "az_" + mod + "_meta.json")
+    diff_meta_file = os.path.join(cli_ext_path, diff_meta_path, "az_" + mod + "_meta.json")
+    if not os.path.exists(base_meta_file) and not os.path.exists(diff_meta_file):
+        print("no base and diff meta file found for {0}".format(mod))
+        return
+    elif not os.path.exists(base_meta_file) and os.path.exists(diff_meta_file):
+        print("no base meta file found for {0}".format(mod))
+        mod_update_info.update({"version": INIT_RELEASE_VERSION, "preview_tag": "add"})
+        return
+    elif not os.path.exists(diff_meta_file):
+        print("no diff meta file found for {0}".format(mod))
+        return
+    pre_release = get_module_metadata_of_max_version(mod)
+    if pre_release is None:
+        next_version = cal_next_version(base_meta_file=base_meta_file, diff_meta_file=diff_meta_file,
+                                        current_version=DEFAULT_VERSION,
+                                        next_version_pre_tag=next_version_pre_tag,
+                                        next_version_segment_tag=next_version_segment_tag)
+    else:
+        next_version = cal_next_version(base_meta_file=base_meta_file, diff_meta_file=diff_meta_file,
+                                        current_version=pre_release['metadata']['version'],
+                                        is_preview=pre_release['metadata'].get("azext.isPreview", None),
+                                        is_experimental=pre_release['metadata'].get("azext.isExperimental", None),
+                                        next_version_pre_tag=next_version_pre_tag,
+                                        next_version_segment_tag=next_version_segment_tag)
+    mod_update_info.update(next_version)
+
+def fill_module_update_info(mod_update_info):
+    for mod in changed_module_list:
+        update_info = {}
+        extract_module_history_update_info(update_info, mod)
+        extract_module_version_update_info(update_info, mod)
+        extract_module_metadata_update_info(update_info, mod)
+        extract_module_version_info(update_info, mod)
+        mod_update_info[mod] = update_info
+    print(mod_update_info)
 
 def get_module_metadata_of_max_version(mod):
     if mod not in get_index_data()['extensions']:
@@ -73,16 +184,34 @@ def add_suggest_header(comment_message):
     comment_message.append("## :warning: Release Suggestions")
 
 
-def gen_comment_message(mod, next_version, comment_message):
+def gen_comment_message(mod, mod_update_info, comment_message):
     comment_message.append("### Module: {0}".format(mod))
-    comment_message.append(" - Update version to `{0}` in setup.py".format(next_version.get("version", "-")))
-    if next_version.get("preview_tag", None) == "add":
-        comment_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
-    if next_version.get("preview_tag", None) == "remove":
-        comment_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
-    if next_version.get("exp_tag", None) == "remove":
-        comment_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
+    if not mod_update_info["history_updated"]:
+        comment_message.append(" - Please log updates into to `src/{0}/HISTORY.rst`".format(mod))
+    if not mod_update_info["setup_updated"]:
+        comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-"), mod))
+    else:
+        if mod_update_info.get("version", "-") != mod_update_info["version_diff"]:
+            comment_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-")))
 
+    if mod_update_info.get("preview_tag", None) == "add":
+        if mod_update_info.get("preview_tag_diff", None):
+            if mod_update_info["preview_tag_diff"] != "add":
+                comment_message.append(' - :warning: Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
+        else:
+            comment_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
+    if mod_update_info.get("preview_tag", None) == "remove":
+        if mod_update_info.get("preview_tag_diff", None):
+            if mod_update_info["preview_tag_diff"] != "remove":
+                comment_message.append(' - :warning: Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
+        else:
+            comment_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
+    if mod_update_info.get("exp_tag", None) == "remove":
+        if mod_update_info.get("exp_tag_diff", None):
+            if mod_update_info["exp_tag_diff"] != "remove":
+                comment_message.append(' - :warning: Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
+        else:
+            comment_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
 
 def add_label_hint_message(comment_message):
     comment_message.append("#### Notes")
@@ -111,45 +240,19 @@ def main():
     print("changed_module_list: ", changed_module_list)
     print("pr_label_list: ", pr_label_list)
     comment_message = []
+    module_update_info = {}
     if len(changed_module_list) == 0:
         comment_message.append("For more info about extension versioning, please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md)")
         save_comment_message(cli_ext_path, output_file, comment_message)
         return
-    next_version_pre_tag = get_next_version_pre_tag()
-    next_version_segment_tag = get_next_version_segment_tag()
-    print("next_version_pre_tag: ", next_version_pre_tag)
-    print("next_version_segment_tag: ", next_version_segment_tag)
+    fill_module_update_info(module_update_info)
+    if len(module_update_info) == 0:
+        comment_message.append("For more info about extension versioning, please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md)")
+        save_comment_message(cli_ext_path, output_file, comment_message)
+        return
     add_suggest_header(comment_message)
-    for mod in changed_module_list:
-        base_meta_file = os.path.join(cli_ext_path, base_meta_path, "az_" + mod + "_meta.json")
-        diff_meta_file = os.path.join(cli_ext_path, diff_meta_path, "az_" + mod + "_meta.json")
-        if not os.path.exists(base_meta_file) and not os.path.exists(diff_meta_file):
-            print("no base and diff meta file found for {0}".format(mod))
-            continue
-        elif not os.path.exists(base_meta_file) and os.path.exists(diff_meta_file):
-            print("no base meta file found for {0}".format(mod))
-            gen_comment_message(mod, {"version": INIT_RELEASE_VERSION}, comment_message)
-            continue
-        elif not os.path.exists(diff_meta_file):
-            print("no diff meta file found for {0}".format(mod))
-            continue
-
-        pre_release = get_module_metadata_of_max_version(mod)
-        if pre_release is None:
-            next_version = cal_next_version(base_meta_file=base_meta_file, diff_meta_file=diff_meta_file,
-                                            current_version=DEFAULT_VERSION,
-                                            next_version_pre_tag=next_version_pre_tag,
-                                            next_version_segment_tag=next_version_segment_tag
-                                            )
-        else:
-            next_version = cal_next_version(base_meta_file=base_meta_file, diff_meta_file=diff_meta_file,
-                                            current_version=pre_release['metadata']['version'],
-                                            is_preview=pre_release['metadata'].get("azext.isPreview", None),
-                                            is_experimental=pre_release['metadata'].get("azext.isExperimental", None),
-                                            next_version_pre_tag=next_version_pre_tag,
-                                            next_version_segment_tag=next_version_segment_tag
-                                            )
-        gen_comment_message(mod, next_version, comment_message)
+    for mod, update_info in module_update_info.items():
+        gen_comment_message(mod, update_info, comment_message)
     add_label_hint_message(comment_message)
     print(comment_message)
     save_comment_message(cli_ext_path, output_file, comment_message)
