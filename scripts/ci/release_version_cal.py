@@ -195,7 +195,7 @@ def add_suggest_header(comment_message):
 def gen_comment_message(mod, mod_update_info, comment_message):
     comment_message.append("### Module: {0}".format(mod))
     if not mod_update_info["history_updated"]:
-        comment_message.append(" - Please log updates into to `src/{0}/HISTORY.rst`".format(mod))
+        comment_message.append(" - :warning: Please log updates into to `src/{0}/HISTORY.rst`".format(mod))
     if not mod_update_info["setup_updated"]:
         comment_message.append(" - Update `VERSION` to `{0}` in `src/{1}/HISTORY.rst`".format(mod_update_info.get("version", "-"), mod))
     else:
