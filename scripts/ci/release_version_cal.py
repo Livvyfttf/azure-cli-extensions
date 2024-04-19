@@ -98,7 +98,9 @@ def extract_module_metadata_update_info(mod_update_info, mod):
             if mod_update_info["meta_updated"]:
                 if line.find("---") != -1:
                     break
+                print("line:", line)
                 ispreview_add_match = re.findall(module_ispreview_add_pattern, line)
+                print("ispreview_add_match:", ispreview_add_match)
                 if ispreview_add_match and len(ispreview_add_match):
                     mod_update_info["preview_tag_diff"] = "add"
                 ispreview_remove_match = re.findall(module_ispreview_remove_pattern, line)
@@ -111,11 +113,7 @@ def extract_module_metadata_update_info(mod_update_info, mod):
                 if isexp_remove_match and len(isexp_remove_match):
                     mod_update_info["exp_tag_diff"] = "remove"
             else:
-                print("line: ")
-                print(line)
                 module_meta_update_match = re.findall(module_meta_update_pattern, line)
-                print("module_meta_update_match:")
-                print(module_meta_update_match)
                 if module_meta_update_match:
                     mod_update_info["meta_updated"] = True
 
