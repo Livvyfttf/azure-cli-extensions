@@ -113,8 +113,10 @@ def extract_module_metadata_update_info(mod_update_info, mod):
             else:
                 print("line: ")
                 print(line)
-                module_meta_update_pattern = re.findall(module_meta_update_pattern, line)
-                if module_meta_update_pattern:
+                module_meta_update_match = re.findall(module_meta_update_pattern, line)
+                print("module_meta_update_match:")
+                print(module_meta_update_match)
+                if module_meta_update_match:
                     mod_update_info["meta_updated"] = True
 
 def extract_module_version_info(mod_update_info, mod):
