@@ -88,7 +88,9 @@ def extract_module_metadata_update_info(mod_update_info, mod):
     module_meta_update_pattern = re.compile(r"\+\+\+.*?src/%s/azext_.*?/azext_metadata.json"%mod)
     print("module_meta_update_pattern: ", module_meta_update_pattern)
     module_ispreview_add_pattern = re.compile(r"\-.*?azext.isPreview.*?true")
+    print("module_ispreview_add_pattern: ", module_ispreview_add_pattern)
     module_ispreview_remove_pattern = re.compile(r"\-.*?azext.isPreview.*?true")
+    print("module_ispreview_remove_pattern: ", module_ispreview_remove_pattern)
     module_isexp_add_pattern = re.compile(r"\+.*?azext.isExperimental.*?true")
     module_isexp_remove_pattern = re.compile(r"\-.*?azext.isExperimental.*?true")
     with open(diff_code_file, "r") as f:
@@ -109,6 +111,8 @@ def extract_module_metadata_update_info(mod_update_info, mod):
                 if isexp_remove_match and len(isexp_remove_match):
                     mod_update_info["exp_tag_diff"] = "remove"
             else:
+                print("line: ")
+                print(line)
                 module_meta_update_pattern = re.findall(module_meta_update_pattern, line)
                 if module_meta_update_pattern:
                     mod_update_info["meta_updated"] = True
