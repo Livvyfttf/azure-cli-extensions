@@ -202,6 +202,7 @@ def gen_history_comment_message(mod, mod_update_info, mod_message):
 
 def gen_version_comment_message(mod, mod_update_info, mod_message):
     if not mod_update_info["setup_updated"]:
+        
         if mod_update_info.get("version", None):
             mod_message.append(" - Update `VERSION` to `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
     else:
