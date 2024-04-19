@@ -200,7 +200,7 @@ def get_next_version_segment_tag():
 
 
 def add_suggest_header(comment_message):
-    comment_message.append("## :warning: Release Suggestions")
+    comment_message.insert(0, "## :warning: Release Suggestions")
 
 
 def gen_comment_message(mod, mod_update_info, comment_message):
@@ -213,28 +213,50 @@ def gen_comment_message(mod, mod_update_info, comment_message):
         if mod_update_info.get("version", "-") != mod_update_info.get("version_diff", "-"):
             block_pr = 1
             mod_message.append(" - :warning: Please update `VERSION` to be `{0}` in `src/{1}/setup.py`".format(mod_update_info.get("version", "-"), mod))
+    if mod_update_info.get("preview_tag", "-") != mod_update_info.get("preview_tag_diff", "-"):
+        preview_comment_message = " - "
+        if mod_update_info["setup_updated"]: 
+            block_pr = 1
+            preview_comment_message += ":warning: "
+        if mod_update_info.get("preview_tag", None) and mod_update_info.get("preview_tag_diff", None):
+            if mod_update_info["preview_tag"] == "add" and mod_update_info["preview_tag_diff"] == "remove":
+                preview_comment_message += 'Set `azext.isPreview` to `true` in azext_metadata.json for {0}'.format(mod)
+            elif mod_update_info["preview_tag"] == "remove" and mod_update_info["preview_tag_diff"] == "add":
+                preview_comment_message += 'Remove `azext.isPreview: true` in azext_metadata.json for {0}'.format(mod)
+        elif not mod_update_info.get("preview_tag", None) and mod_update_info.get("preview_tag_diff", None):
+            if mod_update_info["preview_tag_diff"] == "add":
+                preview_comment_message += 'Remove `azext.isPreview: true` in azext_metadata.json for {0}'.format(mod)
+            elif mod_update_info["preview_tag_diff"] == "remove":
+                preview_comment_message += 'Set `azext.isPreview` to `true` in azext_metadata.json for {0}'.format(mod)
+        elif mod_update_info.get("preview_tag", None) and not mod_update_info.get("preview_tag_diff", None):
+            if mod_update_info["preview_tag"] == "add":
+                preview_comment_message += 'Set `azext.isPreview` to `true` in azext_metadata.json for {0}'.format(mod)
+            elif mod_update_info["preview_tag"] == "remove":
+                preview_comment_message += 'Remove `azext.isPreview: true` in azext_metadata.json for {0}'.format(mod)
+        mod_message.append(preview_comment_message)
 
-    if mod_update_info.get("preview_tag", None) == "add":
-        if mod_update_info.get("preview_tag_diff", None):
-            if mod_update_info["preview_tag_diff"] != "add":
-                block_pr = 1
-                mod_message.append(' - :warning: Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
-        else:
-            mod_message.append(' - Set `azext.isPreview` to `true` in azext_{0}/azext_metadata.json'.format(mod))
-    if mod_update_info.get("preview_tag", None) == "remove":
-        if mod_update_info.get("preview_tag_diff", None):
-            if mod_update_info["preview_tag_diff"] != "remove":
-                block_pr = 1
-                mod_message.append(' - :warning: Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
-        else:
-            mod_message.append(' - Remove `azext.isPreview: true` in azext_{0}/azext_metadata.json'.format(mod))
-    if mod_update_info.get("exp_tag", None) == "remove":
-        if mod_update_info.get("exp_tag_diff", None):
-            if mod_update_info["exp_tag_diff"] != "remove":
-                block_pr = 1
-                mod_message.append(' - :warning: Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
-        else:
-            mod_message.append(' - Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod))
+    if mod_update_info.get("exp_tag", "-") != mod_update_info.get("exp_tag_diff", "-"):
+        exp_comment_message = " - "
+        if mod_update_info["setup_updated"]: 
+            block_pr = 1
+            exp_comment_message += ":warning: "
+        if mod_update_info.get("exp_tag", None) and mod_update_info.get("exp_tag_diff", None):
+            if mod_update_info["exp_tag"] == "remove" and mod_update_info["exp_tag_diff"] == "add":
+                exp_comment_message += 'Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod)
+            if mod_update_info["exp_tag"] == "add" and mod_update_info["exp_tag_diff"] == "remove":
+                exp_comment_message += 'Set `azext.isExperimental` to `true` in azext_metadata.json for {0}'.format(mod)
+        elif not mod_update_info.get("exp_tag", None) and mod_update_info.get("exp_tag_diff", None):
+            if mod_update_info["exp_tag_diff"] == "add":
+                exp_comment_message += 'Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod)
+            elif mod_update_info["exp_tag_diff"] == "remove":
+                exp_comment_message += 'Set `azext.isExperimental` to `true` in azext_metadata.json for {0}'.format(mod)
+        elif mod_update_info.get("exp_tag", None) and not mod_update_info.get("exp_tag_diff", None):
+            if mod_update_info["exp_tag"] == "add":
+                exp_comment_message += 'Set `azext.isExperimental` to `true` in azext_metadata.json for {0}'.format(mod)
+            elif mod_update_info["exp_tag"] == "remove":
+                exp_comment_message += 'Remove `azext.isExperimental: true` in azext_{0}/azext_metadata.json'.format(mod)
+        mod_message.append(exp_comment_message)
+            
     if len(mod_message):
         comment_message.append("### Module: {0}".format(mod))
         comment_message += mod_message
@@ -276,10 +298,13 @@ def main():
         comment_message.append("For more info about extension versioning, please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md)")
         save_comment_message(cli_ext_path, output_file, comment_message)
         return
-    add_suggest_header(comment_message)
     for mod, update_info in modules_update_info.items():
         gen_comment_message(mod, update_info, comment_message)
-    add_label_hint_message(comment_message)
+    if len(comment_message):
+        add_suggest_header(comment_message)
+        add_label_hint_message(comment_message)
+    else:
+        comment_message.append("For more info about extension versioning, please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md)")   
     print("comment_message:")
     print(comment_message)
     print("block_pr:", block_pr)
