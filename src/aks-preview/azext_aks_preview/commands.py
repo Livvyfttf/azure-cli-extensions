@@ -5,6 +5,8 @@
 
 from azure.cli.core.commands import CliCommandType
 
+# add comment here
+
 from azext_aks_preview._client_factory import (
     cf_agent_pools,
     cf_maintenance_configurations,
