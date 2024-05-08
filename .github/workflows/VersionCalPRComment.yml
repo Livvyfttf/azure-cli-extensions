@@ -155,4 +155,5 @@ jobs:
         uses: mondeja/remove-labels-gh-action@v2
         if: ${{ steps.get_comment_message.outputs.BlockPR == 0 }}
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           labels: release-version-block
