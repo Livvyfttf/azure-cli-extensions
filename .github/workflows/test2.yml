@@ -1,4 +1,4 @@
-name: dollar var
+name: 2 dollar var
 
 on:
   workflow_dispatch:
