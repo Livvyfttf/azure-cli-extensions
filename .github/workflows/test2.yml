@@ -56,4 +56,3 @@ jobs:
             git branch -a
             echo 2 dollar var
             git checkout $diff_branch
-
