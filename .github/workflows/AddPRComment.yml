@@ -1,11 +1,6 @@
 on:
-  pull_request_target:
+  issues:
     types: [opened]
-    branches:
-      - main
-
-permissions:
-  pull-requests: write
 
 jobs:
   thank-user:
