@@ -1,4 +1,4 @@
-name: dollar var
+name: env.var
 
 on:
   workflow_dispatch:
@@ -54,7 +54,7 @@ jobs:
             git --version
             git log --oneline | head -n 30
             git branch -a
-            echo 3 dollor var
-            git checkout $diff_branch
+            echo 3 env var
+            git checkout ${{ env.diff_branch }}
             exit 1
 
