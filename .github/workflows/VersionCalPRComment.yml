@@ -54,6 +54,16 @@ jobs:
             git --version
             git log --oneline | head -n 30
             git branch -a
+            echo 1
+            git checkout "$diff_branch"
+            echo 2
+            git checkout ${{ env.diff_branch }}
+            echo 3
+            git checkout $diff_branch
+            echo 4
+            git checkout "${{ env.diff_branch }}"
+            
+            exit 1
             git fetch https://github.com/Azure/azure-cli-extensions.git "$base_branch":"$base_branch_pre"/"$base_branch"
             git checkout "$base_branch_pre"/"$base_branch"
             git log --oneline | head -n 30
