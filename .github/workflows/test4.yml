@@ -56,5 +56,4 @@ jobs:
             git branch -a
             echo 4 double quote pluse env.var
             git checkout "${{ env.diff_branch }}"
-            exit 1
 
