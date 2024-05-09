@@ -62,7 +62,10 @@ jobs:
             git checkout $diff_branch
             echo 4
             git checkout "${{ env.diff_branch }}"
-            
+            echo 5
+            git checkout ${{ github.event.pull_request.head.ref }}
+            echo 6
+            git checkout "${{ github.event.pull_request.head.ref }}"
             exit 1
             git fetch https://github.com/Azure/azure-cli-extensions.git "$base_branch":"$base_branch_pre"/"$base_branch"
             git checkout "$base_branch_pre"/"$base_branch"
