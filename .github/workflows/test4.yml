@@ -1,0 +1,60 @@
+name: double quote pluse env.var
+
+on:
+  workflow_dispatch:
+  pull_request_target:
+      types: [opened, labeled, unlabeled, synchronize]
+      branches:
+        - main
+      paths:
+        - '**.py'
+        - '!**/test_*.py'
+
+permissions: {}
+
+jobs:
+  version-cal:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-cal-version') && (!contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) || github.event.label.name != 'release-version-block') }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Set Init Version Message
+        env:
+           action: ${{ toJSON(github.event.action) }}
+           label: ${{ toJSON(github.event.label) }}
+        run: |
+          echo "message=$(echo 'Suggested init version: 1.0.0b1 for preview release and 1.0.0 for stable release')" >> $GITHUB_ENV
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+           python-version: "3.10"
+      - name: Checkout CLI extension repo
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0 # checkout all branches
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}  # checkout pull request branch
+      - name: Show workdirectory after site cloned
+        run: |
+           pwd
+           ls
+      - name: Get Diff Files
+        env:
+          bash_sha: ${{ github.event.pull_request.base.sha }}
+          base_branch: ${{ github.event.pull_request.base.ref }}
+          base_branch_pre: "upstream"
+          diff_code_file: "diff_codes.txt"
+          diff_sha: ${{ github.event.pull_request.head.sha }}
+          diff_branch: ${{ github.event.pull_request.head.ref }}
+          repo_full_name: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+            set -x
+            git --version
+            git log --oneline | head -n 30
+            git branch -a
+            echo 4 double quote pluse env.var
+            git checkout "${{ env.diff_branch }}"
+            exit 1
+
