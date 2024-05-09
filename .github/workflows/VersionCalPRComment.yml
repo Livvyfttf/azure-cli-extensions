@@ -1,4 +1,4 @@
-name: Generate Release Version and Comment PR
+name: Generate Release Version and Comment PR1
 
 on:
   workflow_dispatch:
@@ -55,17 +55,7 @@ jobs:
             git log --oneline | head -n 30
             git branch -a
             echo 1
-            git checkout "$diff_branch" || true
-            echo 2
-            git checkout ${{ env.diff_branch }} || true
-            echo 3
-            git checkout $diff_branch || true
-            echo 4
-            git checkout "${{ env.diff_branch }}" || true
-            echo 5
-            git checkout ${{ github.event.pull_request.head.ref }} || true
-            echo 6
-            git checkout "${{ github.event.pull_request.head.ref }}" || true
+            git checkout "$diff_branch"
             exit 1
             git fetch https://github.com/Azure/azure-cli-extensions.git "$base_branch":"$base_branch_pre"/"$base_branch"
             git checkout "$base_branch_pre"/"$base_branch"
