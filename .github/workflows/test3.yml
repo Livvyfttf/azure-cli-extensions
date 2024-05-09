@@ -1,4 +1,4 @@
-name: dollarplusvar
+name: dollar var
 
 on:
   workflow_dispatch:
@@ -54,13 +54,7 @@ jobs:
             git --version
             git log --oneline | head -n 30
             git branch -a
-            echo 3 dollor+var
+            echo 3 dollor var
             git checkout $diff_branch
-            echo 4
-            git checkout "${{ env.diff_branch }}"
-            echo 5
-            git checkout ${{ github.event.pull_request.head.ref }}
-            echo 6
-            git checkout "${{ github.event.pull_request.head.ref }}"
             exit 1
 
