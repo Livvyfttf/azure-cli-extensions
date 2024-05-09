@@ -1,4 +1,4 @@
-name: double quote dollar var
+name: 1 double quote dollar var
 
 on:
   workflow_dispatch:
