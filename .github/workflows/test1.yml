@@ -56,4 +56,3 @@ jobs:
             git branch -a
             echo 1 double quote dollar var
             git checkout "$diff_branch"
-            exit 1
