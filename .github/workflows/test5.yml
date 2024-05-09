@@ -56,5 +56,4 @@ jobs:
             git branch -a
             echo 5 github context var
             git checkout ${{ github.event.pull_request.head.ref }}
-            exit 1
 
