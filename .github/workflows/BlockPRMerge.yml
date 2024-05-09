@@ -1,10 +1,8 @@
 name: Block PR merging on blocled labels
 
 on:
-  pull_request_target:
-    types: [labeled, unlabeled]
-    branches:
-      - main
+  issues:
+    types: [opened]
 
 jobs:
   block-merge:
