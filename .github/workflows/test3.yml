@@ -56,5 +56,4 @@ jobs:
             git branch -a
             echo 3 env var
             git checkout ${{ env.diff_branch }}
-            exit 1
 
