@@ -320,6 +320,8 @@ def main():
     print("base_meta_path: ", base_meta_path)
     print("diff_meta_path: ", diff_meta_path)
     print("output_file: ", output_file)
+    print("remove_labels_file: ", remove_labels_file)
+    print("add_labels_file: ", add_labels_file)
     print("changed_module_list: ", changed_module_list)
     print("pr_label_list: ", pr_label_list)
     comment_message = []
