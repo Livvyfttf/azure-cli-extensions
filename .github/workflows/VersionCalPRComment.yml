@@ -151,8 +151,8 @@ jobs:
           add_labels_file: "labels_added.txt"
           remove_labels_file: "labels_removed.txt"
         run: |
-           echo "labels_added=$(cat $add_labels_file)" >> $GITHUB_ENV
-           echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
+           echo "labels_added=$(cat $add_labels_file | sort | uniq | xargs)" >> $GITHUB_ENV
+           echo "labels_removed=$(cat $remove_labels_file | sort | uniq | xargs)" >> $GITHUB_ENV
       - name: Add block release label
         uses: actions-ecosystem/action-add-labels@v1
         with:
