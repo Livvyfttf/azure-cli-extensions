@@ -309,11 +309,13 @@ def save_add_label_file():
     with open(os.path.join(cli_ext_path, add_labels_file), "w") as f:
         if block_pr:
             f.write("release-version-block" + "\n")
+            f.write("do-dot-merge" + "\n")
 
 def save_remove_label_file():
     with open(os.path.join(cli_ext_path, remove_labels_file), "w") as f:
         if not block_pr:
             f.write("release-version-block" + "\n")
+            f.write("do-dot-merge" + "\n")
 
 def main():
     print("Start calculate release version ...\n")
