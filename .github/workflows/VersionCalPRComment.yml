@@ -1,8 +1,14 @@
-name: Generate Release Version and Comment PR1
+name: Generate Release Version and Comment PR
 
 on:
-  issues:
-    types: [opened]
+  workflow_dispatch:
+  pull_request_target:
+      types: [opened, labeled, unlabeled, synchronize]
+      branches:
+        - main
+      paths:
+        - '**.py'
+        - '!**/test_*.py'
 
 permissions: {}
 
@@ -48,9 +54,6 @@ jobs:
             git --version
             git log --oneline | head -n 30
             git branch -a
-            echo 1
-            git checkout "$diff_branch"
-            exit 1
             git fetch https://github.com/Azure/azure-cli-extensions.git "$base_branch":"$base_branch_pre"/"$base_branch"
             git checkout "$base_branch_pre"/"$base_branch"
             git log --oneline | head -n 30
