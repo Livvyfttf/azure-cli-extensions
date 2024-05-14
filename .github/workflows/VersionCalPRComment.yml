@@ -131,7 +131,7 @@ jobs:
            done
            ls ./"$base_meta_path"/
            ls ./"$diff_meta_path"/
-           git checkout "$base_branch_pre"/"$base_branch"
+           # git checkout "$base_branch_pre"/"$base_branch"
            python scripts/ci/release_version_cal.py
            # echo "commit_message=$(cat $output_file)" >> $GITHUB_ENV
            cat $add_labels_file
