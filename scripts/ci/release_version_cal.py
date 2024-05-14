@@ -18,7 +18,8 @@ from util import get_index_data
 base_meta_path = os.environ.get('base_meta_path', None)
 diff_meta_path = os.environ.get('diff_meta_path', None)
 output_file = os.environ.get('output_file', None)
-
+add_labels_file = os.environ.get('add_labels_file', None)
+remove_labels_file = os.environ.get('remove_labels_file', None)
 changed_module_list = os.environ.get('changed_module_list', "").split()
 diff_code_file = os.environ.get('diff_code_file', "")
 print("diff_code_file:", diff_code_file)
@@ -304,6 +305,15 @@ def save_gh_output():
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         print(f'BlockPR={block_pr}', file=fh)
 
+def save_add_label_file():
+    with open(os.path.join(cli_ext_path, add_labels_file), "w") as f:
+        if block_pr:
+            f.write("release-version-block" + "\n")
+
+def save_remove_label_file():
+    with open(os.path.join(cli_ext_path, remove_labels_file), "w") as f:
+        if not block_pr:
+            f.write("release-version-block" + "\n")
 
 def main():
     print("Start calculate release version ...\n")
@@ -335,6 +345,8 @@ def main():
     print("block_pr:", block_pr)
     save_comment_message(output_file, comment_message)
     save_gh_output()
+    save_add_label_file()
+    save_remove_label_file()
 
 
 if __name__ == '__main__':
