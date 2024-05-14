@@ -109,6 +109,8 @@ jobs:
           base_meta_path: "./base_meta/"
           diff_meta_path: "./diff_meta/"
           output_file: "version_update.txt"
+          add_lables_file: "labels_added.txt"
+          remove_lables_file: "labels_removed.txt"
         run: |
            chmod +x env/bin/activate
            source ./env/bin/activate
@@ -141,14 +143,20 @@ jobs:
             version_update.txt
            message-failure: |
             Please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md) to update release versions.
+      - name: Extract labels
+        env:
+          output_file: "version_update.txt"
+          add_lables_file: "labels_added.txt"
+          remove_lables_file: "labels_removed.txt"
+        run: |
+           echo "labels_added=$(cat $add_lables_file)" >> $GITHUB_ENV
+           echo "labels_removed=$(cat $remove_lables_file)" >> $GITHUB_ENV
       - name: Add block release label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ steps.get_comment_message.outputs.BlockPR == 1 }}
         with:
-          labels: release-version-block
+          labels: $labels_added
       - name: Remove block release label
         uses: mondeja/remove-labels-gh-action@v2
-        if: ${{ steps.get_comment_message.outputs.BlockPR == 0 }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          labels: release-version-block
+          labels: $labels_removed
