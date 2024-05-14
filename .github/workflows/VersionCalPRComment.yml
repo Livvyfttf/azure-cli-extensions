@@ -156,7 +156,7 @@ jobs:
       - name: Add block release label
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: ${{ labels_added }}
+          labels: ${{ env.labels_added }}
       - name: Remove block release label
         uses: mondeja/remove-labels-gh-action@v2
         with:
