@@ -151,14 +151,22 @@ jobs:
           add_labels_file: "labels_added.txt"
           remove_labels_file: "labels_removed.txt"
         run: |
-           echo "labels_added=$(cat $add_labels_file | sort | uniq | xargs)" >> $GITHUB_ENV
-           echo "labels_removed=$(cat $remove_labels_file | sort | uniq | xargs)" >> $GITHUB_ENV
+           echo labels_added=$(cat $add_labels_file)
+           echo "labels_added<<EOF" >> $GITHUB_ENV
+           echo "$labels_added" >> $GITHUB_ENV
+           echo "EOF" >> $GITHUB_ENV
+           echo labels_removed=$(cat $remove_labels_file)
+           echo "labels_removed<<EOF" >> $GITHUB_ENV
+           echo "$labels_removed" >> $GITHUB_ENV
+           echo "EOF" >> $GITHUB_ENV
+           # echo "labels_added=$(cat $add_labels_file)" >> $GITHUB_ENV
+           # echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
       - name: Add block release label
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels:  ${{ env.add_labels_file }}
+          labels:  ${{ env.labels_added }}
       - name: Remove block release label
         uses: mondeja/remove-labels-gh-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          labels: ${{ env.remove_labels_file }}
+          labels: ${{ env.labels_removed }}
