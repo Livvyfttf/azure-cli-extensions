@@ -85,19 +85,19 @@ jobs:
            cd ../
            pwd
            ls
-      # - name: Install azdev
-      #   run: | 
-      #      python -m pip install --upgrade pip
-      #      set -ev
-      #      python -m venv env
-      #      chmod +x env/bin/activate
-      #      source ./env/bin/activate
-      #      pip install azdev
-      #      azdev --version
-      #      cd ../
-      #      azdev setup -c azure-cli -r azure-cli-extensions --debug
-      #      az --version
-      #      pip list -v
+      - name: Install azdev
+        run: | 
+           python -m pip install --upgrade pip
+           set -ev
+           python -m venv env
+           chmod +x env/bin/activate
+           source ./env/bin/activate
+           pip install azdev
+           azdev --version
+           cd ../
+           azdev setup -c azure-cli -r azure-cli-extensions --debug
+           az --version
+           pip list -v
       - name: Gen Base and Diff Metadata
         id: get_comment_message
         env:
@@ -157,12 +157,10 @@ jobs:
       - name: Add block release label
         run: |
           LABELS='["your-label-1","your-label-2"]'
-    
-          curl --request POST \
-          --url "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
-          --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          --header "Content-Type: application/json" \
-          --data "{\"labels\": $LABELS}"
+          curl -X POST \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d '{"labels": ["label1", "label2"]}'
       - name: Remove block release label
         uses: mondeja/remove-labels-gh-action@v2
         with:
