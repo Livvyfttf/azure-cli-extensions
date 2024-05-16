@@ -155,6 +155,8 @@ jobs:
            echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
            echo $GITHUB_ENV.labels_added
       - name: Add block release label
+        env:
+          add_labels_file: "labels_added.txt"
         run: |
           LABELS=$(cat $add_labels_file)
           echo "$LABELS"
