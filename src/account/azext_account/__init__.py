@@ -14,6 +14,7 @@ except ImportError:
 class SubscriptionClientCommandsLoader(AzCommandsLoader):
 
     def __init__(self, cli_ctx=None):
+        # to do
         from azure.cli.core.commands import CliCommandType
         from azext_account.generated._client_factory import cf_account
         account_custom = CliCommandType(
