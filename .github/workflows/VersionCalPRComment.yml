@@ -85,19 +85,19 @@ jobs:
            cd ../
            pwd
            ls
-      - name: Install azdev
-        run: | 
-           python -m pip install --upgrade pip
-           set -ev
-           python -m venv env
-           chmod +x env/bin/activate
-           source ./env/bin/activate
-           pip install azdev
-           azdev --version
-           cd ../
-           azdev setup -c azure-cli -r azure-cli-extensions --debug
-           az --version
-           pip list -v
+      # - name: Install azdev
+      #   run: | 
+      #      python -m pip install --upgrade pip
+      #      set -ev
+      #      python -m venv env
+      #      chmod +x env/bin/activate
+      #      source ./env/bin/activate
+      #      pip install azdev
+      #      azdev --version
+      #      cd ../
+      #      azdev setup -c azure-cli -r azure-cli-extensions --debug
+      #      az --version
+      #      pip list -v
       - name: Gen Base and Diff Metadata
         id: get_comment_message
         env:
