@@ -308,7 +308,7 @@ def save_gh_output():
 def save_add_label_file():
     with open(os.path.join(cli_ext_path, add_labels_file), "w") as f:
         if block_pr:
-            f.write("release-version-block_do-dot-merge")
+            f.write('["release-version-block", "do-dot-merge"]')
 
 def save_remove_label_file():
     with open(os.path.join(cli_ext_path, remove_labels_file), "w") as f:
