@@ -156,11 +156,11 @@ jobs:
            echo $GITHUB_ENV.labels_added
       - name: Add block release label
         run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
           LABELS='["your-label-1","your-label-2"]'
+    
           curl --request POST \
-          --url "https://api.github.com/repos/${{ github.repository }}/issues/${{ PR_NUMBER }}/labels" \
-          --header "Authorization: Bearer ${{ GITHUB_TOKEN }}" \
+          --url "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
+          --header "Authorization: Bearer $GITHUB_TOKEN" \
           --header "Content-Type: application/json" \
           --data "{\"labels\": $LABELS}"
       - name: Remove block release label
