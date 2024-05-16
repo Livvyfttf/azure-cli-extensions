@@ -91,6 +91,8 @@ jobs:
            # echo "commit_message=$(cat $output_file)" >> $GITHUB_ENV
            cat $add_labels_file
            cat $remove_labels_file
+           cat $add_labels_file > $output_file
+           cat $remove_labels_file >> $output_file
       - name: Comment on the pull request
         uses: mshick/add-pr-comment@v2
         with:
