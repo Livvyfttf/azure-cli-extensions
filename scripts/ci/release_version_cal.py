@@ -308,7 +308,7 @@ def save_gh_output():
 def save_add_label_file():
     with open(os.path.join(cli_ext_path, add_labels_file), "w") as f:
         if block_pr:
-            f.write(r"release-version-block\ndo-dot-merge")
+            f.write(r"release-version-block\ndo-dot-merge\r\ntest1\\ntest2\\r\\ntest3")
 
 def save_remove_label_file():
     with open(os.path.join(cli_ext_path, remove_labels_file), "w") as f:
