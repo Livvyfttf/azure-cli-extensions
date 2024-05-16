@@ -160,7 +160,7 @@ jobs:
     
           curl --request POST \
           --url "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
-          --header "Authorization: Bearer $GITHUB_TOKEN" \
+          --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           --header "Content-Type: application/json" \
           --data "{\"labels\": $LABELS}"
       - name: Remove block release label
