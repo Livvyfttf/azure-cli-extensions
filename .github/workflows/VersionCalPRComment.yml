@@ -153,7 +153,6 @@ jobs:
         run: |
            echo "labels_added=$(cat $add_labels_file)" >> $GITHUB_ENV
            echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
-           echo ${{ GITHUB_ENV.labels_added }}
       - name: Add block release label
         run: |
           PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
