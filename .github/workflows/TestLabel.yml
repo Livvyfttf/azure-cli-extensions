@@ -107,9 +107,9 @@ jobs:
           output_file: "version_update.txt"
           add_labels_file: "labels_added.txt"
           remove_labels_file: "labels_removed.txt"
-        run: |
-           echo "labels_added=$(cat $add_labels_file)" >> $GITHUB_ENV
-           echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
+        # run: |
+        #    echo "labels_added=$(cat $add_labels_file)" >> $GITHUB_ENV
+        #    echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
       - name: Add block release label
         env:
           add_labels: ${{ toJson(env.labels_added)}}
