@@ -27,8 +27,7 @@ def save_gh_output():
 
 def save_add_label_file():
     with open(add_labels_file, "w") as f:
-        f.write("release-version-block" + "\n")
-        f.write("do-dot-merge" + "\n")
+        f.write(r'["release-version-block", "do-dot-merge"]')
 
 def save_remove_label_file():
     with open(remove_labels_file, "w") as f:
