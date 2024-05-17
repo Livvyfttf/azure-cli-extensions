@@ -32,8 +32,7 @@ def save_add_label_file():
 def save_remove_label_file():
     with open(remove_labels_file, "w") as f:
         if not block_pr:
-            f.write("qqqqq" + "\n")
-            f.write("lllll" + "\n")
+            f.write(r'["release-version-block", "do-dot-merge"]')
 
 def main():
     print("Start calculate release version ...\n")
