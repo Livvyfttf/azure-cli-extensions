@@ -112,7 +112,7 @@ jobs:
            echo "labels_removed=$(cat $remove_labels_file)" >> $GITHUB_ENV
       - name: Add block release label
         run: |
-          echo ${{ env.labels_added }}
+          echo $(cat labels_added.txt)
           
           curl -X POST \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
