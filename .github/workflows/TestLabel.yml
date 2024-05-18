@@ -83,7 +83,7 @@ jobs:
           diff_meta_path: "./diff_meta/"
           output_file: "version_update.txt"
           add_labels_file: "labels_added.json"
-          remove_labels_file: "labels_removed.json"
+          remove_labels_file: "labels_removed.txt"
         run: |
            set -ev
            # git checkout "$base_branch_pre"/"$base_branch"
@@ -105,7 +105,6 @@ jobs:
       - name: Add block release label
         env: 
           add_labels_file: "labels_added.json"
-          remove_labels_file: "labels_removed.txt"
         run: |
           cat labels_added.json
           curl -X POST \
@@ -114,7 +113,6 @@ jobs:
           -d @labels_added.json
       - name: Add block release label
         env: 
-          add_labels_file: "labels_added.json"
           remove_labels_file: "labels_removed.txt"
         run: |
           for del_lab in `cat labels_removed.txt | sort | uniq | xargs`
