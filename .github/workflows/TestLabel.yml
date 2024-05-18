@@ -14,7 +14,7 @@ jobs:
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-cal-version') && (!contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) || github.event.label.name != 'release-version-block') }}
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      pull-requests: read
       contents: read
     steps:
       - name: Set Init Version Message
@@ -81,18 +81,49 @@ jobs:
           diff_branch: ${{ github.event.pull_request.head.ref }}
           base_meta_path: "./base_meta/"
           diff_meta_path: "./diff_meta/"
+          result_path: "./cal_result"
           output_file: "version_update.txt"
           add_labels_file: "labels_added.json"
           remove_labels_file: "labels_removed.txt"
         run: |
            set -ev
            # git checkout "$base_branch_pre"/"$base_branch"
+           mkdir ${result_path}
            python scripts/ci/gen_labels.py
            # echo "commit_message=$(cat $output_file)" >> $GITHUB_ENV
            cat $add_labels_file
            cat $remove_labels_file
            cat $add_labels_file > $output_file
            cat $remove_labels_file >> $output_file
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-cal-output
+          path: |
+            cal_result
+            !cal_result/**/*.md
+          retention-days: 1
+  version-output:
+    needs: version-cal
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Set Init Version Message
+        env:
+           action: ${{ toJSON(github.event.action) }}
+           label: ${{ toJSON(github.event.label) }}
+        run: |
+          echo "message=$(echo 'Suggested init version: 1.0.0b1 for preview release and 1.0.0 for stable release')" >> $GITHUB_ENV
+      - name: Download version cal result
+        uses: actions/download-artifact@v4
+        with:
+          name: cal_result
+      - name: Show workdirectory after result downloaded
+        run: |
+           pwd
+           ls
       - name: Comment on the pull request
         uses: mshick/add-pr-comment@v2
         with:
@@ -103,8 +134,6 @@ jobs:
            message-failure: |
             Please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md) to update release versions.
       - name: Add block release label
-        env: 
-          add_labels_file: "labels_added.json"
         run: |
           cat labels_added.json
           curl -X POST \
@@ -112,8 +141,6 @@ jobs:
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -d @labels_added.json
       - name: Add block release label
-        env: 
-          remove_labels_file: "labels_removed.txt"
         run: |
           for del_lab in `cat labels_removed.txt | sort | uniq | xargs`
           do 
