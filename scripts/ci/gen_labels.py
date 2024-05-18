@@ -7,9 +7,11 @@
 # pylint: disable=line-too-long
 import os
 import re
+import json
 
 base_meta_path = os.environ.get('base_meta_path', None)
 diff_meta_path = os.environ.get('diff_meta_path', None)
+result_path = os.environ.get('result_path', None)
 output_file = os.environ.get('output_file', None)
 add_labels_file = os.environ.get('add_labels_file', None)
 remove_labels_file = os.environ.get('remove_labels_file', None)
@@ -25,14 +27,18 @@ def save_gh_output():
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         print(f'BlockPR={block_pr}', file=fh)
 
+add_label_dict = {
+    "labels": ["lab1", "lab30"]
+}
+
 def save_add_label_file():
-    with open(add_labels_file, "w") as f:
-        f.write("release-version-block_do-dot-merge")
+    with open(result_path + "/" + add_labels_file, "w") as f:
+        json.dump(add_label_dict, f)
 
 def save_remove_label_file():
-    with open(remove_labels_file, "w") as f:
-        if not block_pr:
-            f.write("release-version-block_do-dot-merge")
+    with open(result_path + "/" + remove_labels_file, "w") as f:
+        f.write("lab2" + "\n")
+        f.write("lab3" + "\n")
 
 def main():
     print("Start calculate release version ...\n")
