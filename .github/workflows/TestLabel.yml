@@ -120,7 +120,7 @@ jobs:
       - name: Download version cal result
         uses: actions/download-artifact@v4
         with:
-          name: cal_result
+          name: version-cal-output
       - name: Show workdirectory after result downloaded
         run: |
            pwd
