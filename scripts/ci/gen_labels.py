@@ -11,7 +11,7 @@ import json
 
 base_meta_path = os.environ.get('base_meta_path', None)
 diff_meta_path = os.environ.get('diff_meta_path', None)
-result_path = os.environ.get('diff_meta_path', None)
+result_path = os.environ.get('result_path', None)
 output_file = os.environ.get('output_file', None)
 add_labels_file = os.environ.get('add_labels_file', None)
 remove_labels_file = os.environ.get('remove_labels_file', None)
