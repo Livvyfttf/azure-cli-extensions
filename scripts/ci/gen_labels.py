@@ -27,19 +27,17 @@ def save_gh_output():
         print(f'BlockPR={block_pr}', file=fh)
 
 add_label_dict = {
-    "labels": ["lab1", "lab2"]
+    "labels": ["lab10", "lab20"]
 }
 
-remove_label_dict = {
-    "labels": ["lab3", "lab4"]
-}
 def save_add_label_file():
     with open(add_labels_file, "w") as f:
         json.dump(add_label_dict, f)
 
 def save_remove_label_file():
     with open(remove_labels_file, "w") as f:
-        json.dump(remove_label_dict, f)
+        f.write("lab1" + "\n")
+        f.write("lab3" + "\n")
 
 def main():
     print("Start calculate release version ...\n")
