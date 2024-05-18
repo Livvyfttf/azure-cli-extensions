@@ -91,10 +91,11 @@ jobs:
            mkdir ${result_path}
            python scripts/ci/gen_labels.py
            # echo "commit_message=$(cat $output_file)" >> $GITHUB_ENV
-           cat $add_labels_file
-           cat $remove_labels_file
-           cat $add_labels_file > $output_file
-           cat $remove_labels_file >> $output_file
+           ls ${result_path}
+           cat $result_path/$add_labels_file
+           cat $result_path/$remove_labels_file
+           cat $result_path/$add_labels_file > $result_path/$output_file
+           cat $result_path/$remove_labels_file >> $result_path/$output_file
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
