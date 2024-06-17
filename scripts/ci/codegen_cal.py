@@ -37,7 +37,8 @@ def check_aaz_module():
             comment_pr_survey = 1
         
     save_comment_pr_survey(comment_pr_survey)
-    if comment_pr_survey:
+    if comment_pr_survey == 1:
+        print("here")
         comment_message = []
         add_survey_hint_message(comment_message)
         save_comment_message(comment_message)
