@@ -50,7 +50,7 @@ def save_comment_message(comment_message):
     print("comment_message:")
     print(comment_message)
     survey_comment_file = os.environ.get('survey_comment_file', "")
-    with open(os.path.join(cli_ext_path, survey_comment_file), "w") as f:
+    with open(os.path.join(cli_ext_path, result_path, survey_comment_file), "w") as f:
         for line in comment_message:
             f.write(line + "\n")
 
@@ -77,7 +77,7 @@ def main(job):
     if job == "check":
         check_aaz_module()
     elif job == "set":
-        pass
+        set_aaz_comment()
     else:
         print("unsupported job type")
 
