@@ -72,7 +72,6 @@ jobs:
           output_file: "is_aaz_check.txt"
         run: |
            set -ev
-           # git checkout "$base_branch_pre"/"$base_branch"
            mkdir ${result_path}
            python scripts/ci/codegen_cal.py --job check
            ls ${result_path}
@@ -99,24 +98,16 @@ jobs:
         run: |
            pwd
            ls
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - name: Check comment file existence
+        id: check_survey_comment_file
+        uses: andstor/file-existence-action@v3
         with:
-           python-version: "3.10"
-      - name: Set is_aaz env
-        id: set_is_aaz_env
-        env:
-          result_path: "./review_result"
-          output_file: "is_aaz_check.txt"
-          survey_comment_file: "aaz_survey_comment.txt"
-        run: |
-           set -ev
-           python scripts/ci/codegen_cal.py --job set
+          files: "./review_result/is_aaz_check.txt"
       - name: Comment survey on the pull request
-        if: ${{ steps.set_is_aaz_env.outputs.CommentAAZSurvey == 1 }}
+        if: steps.check_survey_comment_file.outputs.files_exists == 'true'
         uses: mshick/add-pr-comment@v2
         with:
            repo-token: ${{ secrets.GITHUB_TOKEN }}
            message-id: aazSurveyCommentBot
            message-path: |
-            aaz_survey_comment.txt  
+            ./review_result/aaz_survey_comment.txt  
