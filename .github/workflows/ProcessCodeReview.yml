@@ -70,6 +70,7 @@ jobs:
           pr_label_list: ${{ toJson(github.event.pull_request.labels.*.name) }}
           result_path: "./review_result"
           output_file: "is_aaz_check.txt"
+          survey_comment_file: "aaz_survey_comment.txt"
         run: |
            set -ev
            mkdir ${result_path}
@@ -102,7 +103,7 @@ jobs:
         id: check_survey_comment_file
         uses: andstor/file-existence-action@v3
         with:
-          files: "./review_result/is_aaz_check.txt"
+          files: "./aaz_survey_comment.txt"
       - name: Comment survey on the pull request
         if: steps.check_survey_comment_file.outputs.files_exists == 'true'
         uses: mshick/add-pr-comment@v2
@@ -110,4 +111,4 @@ jobs:
            repo-token: ${{ secrets.GITHUB_TOKEN }}
            message-id: aazSurveyCommentBot
            message-path: |
-            ./review_result/aaz_survey_comment.txt  
+            aaz_survey_comment.txt  
