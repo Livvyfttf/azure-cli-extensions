@@ -10,6 +10,8 @@ from setuptools import setup, find_packages
 
 VERSION = "1.2.1"
 
+# comment here
+
 CLASSIFIERS = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
