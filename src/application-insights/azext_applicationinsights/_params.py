@@ -14,6 +14,7 @@ from azure.cli.core.commands.validators import get_default_location_from_resourc
 from azure.cli.command_modules.monitor.actions import get_period_type
 from ._validators import validate_applications, validate_storage_account_name_or_id, validate_log_analytic_workspace_name_or_id, validate_dest_account
 
+# comment here
 
 def load_arguments(self, _):
     with self.argument_context('monitor app-insights') as c:
