@@ -35,13 +35,12 @@ def check_aaz_module():
     for mod in changed_module_list:
         if check_is_module_aaz_related(mod):
             comment_pr_survey = 1
-        
-    save_comment_pr_survey(comment_pr_survey)
     if comment_pr_survey == 1:
         print("here")
         comment_message = []
         add_survey_hint_message(comment_message)
-        save_comment_message(comment_message)
+        save_comment_message(comment_message)   
+    save_comment_pr_survey(comment_pr_survey)
 
 def add_survey_hint_message(comment_message):
     comment_message.append("#### :info: CodeGen Tools Feedback Collection")
