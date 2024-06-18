@@ -21,6 +21,14 @@ print("cli_ext_src_path: ", cli_ext_src_path)
 DEFAULT_SURVEY_MESSAGE = "Thank you for using our CodeGen tool. We value your feedback, and we would like to know how we can improve our product. Please take a few minutes to fill our [codegen survey](https://forms.office.com/r/j6rQuFUqUf?origin=lprLink) "
 
 def check_is_module_aaz_related(mod):
+    codegen_aaz_folder_pattern = re.compile(r"src/%s/azext_.*?/aaz/" % mod)
+    module_path = os.path.join(cli_ext_src_path, mod)
+    print("module_path: ", module_path)
+    for root, subdir, files in os.walk(module_path):
+        codegen_aaz_match = re.findall(codegen_aaz_folder_pattern, root)
+        if codegen_aaz_match:
+            print(codegen_aaz_match)
+            return True
     return False 
     
 def save_comment_pr_survey(comment_pr_survey):
