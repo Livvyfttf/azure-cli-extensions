@@ -28,7 +28,7 @@ def check_is_module_aaz_related(mod):
         codegen_aaz_match = re.findall(codegen_aaz_folder_pattern, root)
         if codegen_aaz_match:
             print(codegen_aaz_match)
-            return True
+            return False
     return False 
     
 def save_comment_pr_survey(comment_pr_survey):
