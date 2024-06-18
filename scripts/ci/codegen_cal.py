@@ -43,7 +43,7 @@ def check_aaz_module():
         save_comment_message(comment_message)
 
 def add_survey_hint_message(comment_message):
-    comment_message.append("#### :info: CodeGen Tools Feedback Collection")
+    comment_message.append("## CodeGen Tools Feedback Collection")
     comment_message.append(DEFAULT_SURVEY_MESSAGE)
 
 def save_comment_message(comment_message):
