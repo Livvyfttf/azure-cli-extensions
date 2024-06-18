@@ -20,7 +20,6 @@ print("cli_ext_src_path: ", cli_ext_src_path)
 
 DEFAULT_SURVEY_MESSAGE = "Thank you for using our CodeGen tool. We value your feedback, and we would like to know how we can improve our product. Please take a few minutes to fill our [codegen survey](https://forms.office.com/r/j6rQuFUqUf?origin=lprLink) "
 
-
 def check_is_module_aaz_related(mod):
     return True 
     
@@ -35,9 +34,13 @@ def check_aaz_module():
     for mod in changed_module_list:
         if check_is_module_aaz_related(mod):
             comment_pr_survey = 1
-        
+            break
     save_comment_pr_survey(comment_pr_survey)
-
+    if comment_pr_survey == 1:
+        print("here")
+        comment_message = []
+        add_survey_hint_message(comment_message)
+        save_comment_message(comment_message)
 
 def add_survey_hint_message(comment_message):
     comment_message.append("#### :info: CodeGen Tools Feedback Collection")
@@ -47,7 +50,7 @@ def save_comment_message(comment_message):
     print("comment_message:")
     print(comment_message)
     survey_comment_file = os.environ.get('survey_comment_file', "")
-    with open(os.path.join(cli_ext_path, survey_comment_file), "w") as f:
+    with open(os.path.join(cli_ext_path, result_path, survey_comment_file), "w") as f:
         for line in comment_message:
             f.write(line + "\n")
 
