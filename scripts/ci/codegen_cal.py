@@ -9,9 +9,15 @@ import os
 import re
 import argparse
 from util import get_repo_root
+import json
 
 output_file = os.environ.get('output_file', None)
 result_path = os.environ.get('result_path', None)
+
+pr_label_list = os.environ.get("pr_label_list", "")
+print("pr_label_list pre: ", pr_label_list)
+pr_label_list = json.loads(pr_label_list)
+print("pr_label_list after: ", pr_label_list)
 
 cli_ext_path = get_repo_root()
 cli_ext_src_path = os.path.join(cli_ext_path, "src")
