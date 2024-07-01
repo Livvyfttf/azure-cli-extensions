@@ -16,8 +16,9 @@ result_path = os.environ.get('result_path', None)
 
 pr_label_list = os.environ.get("pr_label_list", "")
 print("pr_label_list pre: ", pr_label_list)
-pr_label_list = json.loads(pr_label_list)
+pr_label_list = [name.lower().strip().strip('"').strip("'") for name in json.loads(pr_label_list)]
 print("pr_label_list after: ", pr_label_list)
+print("isinstancearr: ", isinstance(pr_label_list, list))
 
 cli_ext_path = get_repo_root()
 cli_ext_src_path = os.path.join(cli_ext_path, "src")
