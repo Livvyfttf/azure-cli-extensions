@@ -10,7 +10,7 @@
 # pylint disable=unused-import
 from azure.cli.core import AzCommandsLoader
 import azext_network_manager._help  # pylint: disable=unused-import
-
+print("here")
 
 class NetworkManagementClientCommandsLoader(AzCommandsLoader):
 
