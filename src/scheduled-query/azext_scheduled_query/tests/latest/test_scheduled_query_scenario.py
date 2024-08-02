@@ -11,7 +11,7 @@ from azure.cli.testsdk import (ScenarioTest, ResourceGroupPreparer)
 
 TEST_DIR = os.path.abspath(os.path.join(os.path.abspath(__file__), '..'))
 
-
+VERSION = "100.0.0"
 class Scheduled_queryScenarioTest(ScenarioTest):
 
     @ResourceGroupPreparer(name_prefix='cli_test_scheduled_query', location='eastus')
