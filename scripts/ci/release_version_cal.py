@@ -16,7 +16,7 @@ from azdev.operations.extensions import cal_next_version
 from azdev.operations.constant import (PREVIEW_INIT_SUFFIX, VERSION_MAJOR_TAG, VERSION_MINOR_TAG,
                                        VERSION_PATCH_TAG, VERSION_STABLE_TAG, VERSION_PREVIEW_TAG, VERSION_PRE_TAG)
 from util import get_index_data
-
+print("aaa")
 base_meta_path = os.environ.get('base_meta_path', None)
 diff_meta_path = os.environ.get('diff_meta_path', None)
 result_path = os.environ.get('result_path', None)
