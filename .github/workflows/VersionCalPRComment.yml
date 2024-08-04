@@ -80,11 +80,14 @@ jobs:
           do
             echo changed module: "${mod}"
           done
-          if [ ${#changed_module_list[@]} -eq 0 ]; then
+
+          if [ -z "$changed_module_list" ]; then
             echo "no_changed_mod=true" >> $GITHUB_ENV
           else
             echo "no_changed_mod=false" >> $GITHUB_ENV
           fi
+
+          echo ${#changed_module_list[@]}
       - name: Checkout CLI main repo
         if: ${{ env.no_changed_mod == 'false' }}
         uses: actions/checkout@v4
