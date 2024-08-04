@@ -200,6 +200,7 @@ jobs:
             !cal_result/**/*.md
   version-output:
     needs: [version-cal, skip-version-cal]
+    if: always()
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
