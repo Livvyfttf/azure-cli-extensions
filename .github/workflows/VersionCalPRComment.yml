@@ -54,6 +54,7 @@ jobs:
         env:
           bash_sha: ${{ github.event.pull_request.base.sha }}
           base_branch: ${{ github.event.pull_request.base.ref }}
+          base_repo: ${{ github.event.pull_request.base.repo.clone_url }}
           base_branch_pre: "upstream"
           diff_code_file: "diff_codes.txt"
           diff_sha: ${{ github.event.pull_request.head.sha }}
@@ -64,7 +65,7 @@ jobs:
             git --version
             git log --oneline | head -n 30
             git branch -a
-            git fetch https://github.com/Azure/azure-cli-extensions.git "$base_branch":"$base_branch_pre"/"$base_branch"
+            git fetch "$base_repo" "$base_branch":"$base_branch_pre"/"$base_branch"
             git checkout "$base_branch_pre"/"$base_branch"
             git log --oneline | head -n 30
             git checkout "$diff_branch"
@@ -262,3 +263,12 @@ jobs:
              "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels/${del_lab}" \
              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}"
           done
+      - uses: snnaplab/get-labels-action@v1
+      - name: Check real time labels
+        if: contains(fromJSON(env.LABELS), 'release-version-block')
+        run: |
+          for lab in ${LABELS[@]}
+          do
+            echo has label: "${lab}"
+          done
+          exit 1
