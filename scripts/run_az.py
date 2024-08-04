@@ -6,5 +6,5 @@
 import sys
 
 from azure.cli import __main__ as cli_main
-
+print("start here")
 sys.exit(cli_main(sys.argv))
