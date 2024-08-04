@@ -267,8 +267,6 @@ jobs:
       - name: Check real time labels
         if: contains(fromJSON(env.LABELS), 'release-version-block')
         run: |
-          for lab in ${LABELS[@]}
-          do
-            echo has label: "${lab}"
-          done
+          echo label: $LABELS
+          echo blocked
           exit 1
