@@ -62,7 +62,6 @@ jobs:
           repo_full_name: ${{ github.event.pull_request.head.repo.full_name }}
         run: |
             set -x
-            echo ${which sh}
             git --version
             git log --oneline | head -n 30
             git branch -a
@@ -78,7 +77,6 @@ jobs:
             git --no-pager diff --diff-filter=ACMRT "$base_branch_pre"/"$base_branch"..."$diff_branch" > "$diff_code_file"
       - name: Display PR Diff Modules
         run: |
-          echo ${which sh}
           for mod in ${changed_module_list[@]}
           do
             echo changed module: "${mod}"
