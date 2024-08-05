@@ -11,7 +11,7 @@
 from azure.cli.testsdk import ScenarioTest
 from azure.cli.testsdk import ResourceGroupPreparer
 
-
+print("abc")
 def step_data_collection_rule_show(test, _, checks=None):
     if checks is None:
         checks = []
