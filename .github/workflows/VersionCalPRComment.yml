@@ -72,7 +72,7 @@ jobs:
             git log --oneline | head -n 30
             git --no-pager diff --name-only --diff-filter=ACMRT "$base_branch_pre"/"$base_branch"..."$diff_branch" | grep -v "/tests/" > changed_files
             cat changed_files
-            cat changed_files | grep src/ | awk -F"src/" '{print $2}'| awk -F"/" '{print $1}' | sort | uniq > changed_modules
+            cat changed_files | grep src/ | awk -F"src/" '{print $2}'| awk -F"/" '{print $1}' | sort | uniq
             echo "changed_module_list=$(cat changed_files | grep src/ | awk -F"src/" '{print $2}'| awk -F"/" '{print $1}' | sort | uniq)" >> $GITHUB_ENV
             git --no-pager diff --diff-filter=ACMRT "$base_branch_pre"/"$base_branch"..."$diff_branch" > "$diff_code_file"
       - name: Display PR Diff Modules
@@ -196,7 +196,6 @@ jobs:
           name: version-cal-output
           path: |
             cal_result
-            !cal_result/**/*.md
   version-output:
     needs: [version-cal, skip-version-cal]
     if: always()
@@ -219,6 +218,34 @@ jobs:
         run: |
           pwd
           ls
+      - name: Check comment file existence
+        id: check_comment_file
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "./version_update.txt"
+      - name: Comment on the pull request
+        if: steps.check_comment_file.outputs.files_exists == 'true'
+        uses: mshick/add-pr-comment@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          message-id: versioncommentbot
+          message-path: |
+            version_update.txt
+          message-failure: |
+            Please refer to [Extension version schema](https://github.com/Azure/azure-cli/blob/release/doc/extensions/versioning_guidelines.md) to update release versions.
+      - name: Check add label file existence
+        id: check_add_label_file
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "./labels_added.json"
+      - name: Add block release label
+        if: steps.check_add_label_file.outputs.files_exists == 'true'
+        run: |
+          cat labels_added.json
+          curl -X POST \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d @labels_added.json
       - name: Check delete label file existence
         id: check_delete_label_file
         uses: andstor/file-existence-action@v3
