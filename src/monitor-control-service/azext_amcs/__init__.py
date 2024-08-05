@@ -12,7 +12,7 @@
 import azext_amcs._help
 from azure.cli.core import AzCommandsLoader
 
-
+print("aaa")
 class MonitorClientCommandsLoader(AzCommandsLoader):
 
     def __init__(self, cli_ctx=None):
