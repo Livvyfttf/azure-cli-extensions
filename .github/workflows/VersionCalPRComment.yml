@@ -63,17 +63,17 @@ jobs:
         run: |
             set -x
             git --version
-            git log --oneline | head -n 30
+            git log --oneline | head -n 10
             git branch -a
             git fetch "$base_repo" "$base_branch":"$base_branch_pre"/"$base_branch"
             git checkout "$base_branch_pre"/"$base_branch"
-            git log --oneline | head -n 30
+            git log --oneline | head -n 10
             git checkout "$diff_branch"
-            git log --oneline | head -n 30
+            git log --oneline | head -n 10
             git --no-pager diff --name-only --diff-filter=ACMRT "$base_branch_pre"/"$base_branch"..."$diff_branch" | grep -v "/tests/" > changed_files
             cat changed_files
-            cat changed_files | grep src/ | awk -F"src/" '{print $2}'| awk -F"/" '{print $1}' | sort | uniq
-            echo "changed_module_list=$(cat changed_files | grep src/ | awk -F"src/" '{print $2}'| awk -F"/" '{print $1}' | sort | uniq)" >> $GITHUB_ENV
+            cat changed_files | grep src/ | awk -F"src/" '{print $2}'| grep / | awk -F"/" '{print $1}' | sort | uniq
+            echo "changed_module_list=$(cat changed_files | grep src/ | awk -F"src/" '{print $2}'| grep / | awk -F"/" '{print $1}' | sort | uniq)" >> $GITHUB_ENV
             git --no-pager diff --diff-filter=ACMRT "$base_branch_pre"/"$base_branch"..."$diff_branch" > "$diff_code_file"
       - name: Display PR Diff Modules
         run: |
@@ -81,7 +81,6 @@ jobs:
           do
             echo changed module: "${mod}"
           done
-
           if [ -z "$changed_module_list" ]; then
             echo "no_changed_mod=true" >> $GITHUB_ENV
           else
