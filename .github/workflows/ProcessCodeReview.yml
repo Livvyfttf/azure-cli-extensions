@@ -115,7 +115,7 @@ jobs:
            message-path: |
             aaz_survey_comment.txt
       - name: Copilot PR Review
-        uses: AllyW/copilot-pr-review@v0.1.2
+        uses: AllyW/copilot-pr-review@v0.1.3
         with:
             APIKEY: ${{ secrets.APIKEY }}
             ENDPOINT: ${{ secrets.ENDPOINT }}
