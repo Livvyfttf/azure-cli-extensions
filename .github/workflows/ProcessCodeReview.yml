@@ -2,7 +2,7 @@ name: Auto Review PR
 
 on:
   pull_request_target:
-      types: [opened, synchronize]
+      types: [opened, synchronize, labeled, unlabeled ]
       branches:
         - main
 
@@ -113,11 +113,11 @@ jobs:
            repo-token: ${{ secrets.GITHUB_TOKEN }}
            message-id: aazSurveyCommentBot
            message-path: |
-            aaz_survey_comment.txt 
-              - name: Azure login
+            aaz_survey_comment.txt
       - name: Copilot PR Review
         uses: AllyW/copilot-pr-review@v0.1.1
         with:
             APIKEY: ${{ secrets.APIKEY }}
             ENDPOINT: ${{ secrets.ENDPOINT }}
             PR_URL: ${{ toJSON(github.event) }}
+            AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
