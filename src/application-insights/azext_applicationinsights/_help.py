@@ -13,7 +13,7 @@ helps['monitor app-insights'] = """
     parameters:
       - name: --offset
         short-summary: >
-          Time offset of the query range, in ##d##h format.
+          Time offset of the query range, in ##d##h format. ISO format is also supported
         long-summary: >
           Can be used with either --start-time or --end-time. If used with --start-time, then
           the end time will be calculated by adding the offset. If used with --end-time (default), then
