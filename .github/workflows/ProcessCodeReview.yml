@@ -116,7 +116,7 @@ jobs:
             aaz_survey_comment.txt 
               - name: Azure login
       - name: Copilot PR Review
-        uses: AllyW/copilot-pr-review@v0.1.0
+        uses: AllyW/copilot-pr-review@v0.1.1
         with:
             APIKEY: ${{ secrets.APIKEY }}
             ENDPOINT: ${{ secrets.ENDPOINT }}
