@@ -113,4 +113,11 @@ jobs:
            repo-token: ${{ secrets.GITHUB_TOKEN }}
            message-id: aazSurveyCommentBot
            message-path: |
-            aaz_survey_comment.txt  
+            aaz_survey_comment.txt 
+              - name: Azure login
+      - name: Copilot PR Review
+        uses: AllyW/copilot-pr-review@v0.1.0
+        with:
+            APIKEY: ${{ secrets.APIKEY }}
+            ENDPOINT: ${{ secrets.ENDPOINT }}
+            PR_URL: ${{ toJSON(github.event) }}
