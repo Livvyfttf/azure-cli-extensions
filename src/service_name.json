@@ -55,6 +55,11 @@
     "URL": "https://learn.microsoft.com/azure/app-service"
   },
   {
+    "Command": "az arcgateway",
+    "AzureServiceName": "Arc",
+    "URL": "https://learn.microsoft.com/azure/azure-arc/servers/overview"
+  },
+  {
     "Command": "az astronomer",
     "AzureServiceName": "Astronomer",
     "URL": "https://learn.microsoft.com/en-us/azure/partner-solutions/astronomer"
@@ -98,11 +103,6 @@
     "Command": "az communication",
     "AzureServiceName": "Communication Services",
     "URL": "https://learn.microsoft.com/azure/communication-services"
-  },
-  {
-    "Command": "az compute-diagnostic",
-    "AzureServiceName": "Compute Diagnostic",
-    "URL": ""
   },
   {
     "Command": "az confcom",
@@ -230,6 +230,11 @@
     "URL": "https://azure.microsoft.com/services/digital-twins"
   },
   {
+    "Command": "az durabletask",
+    "AzureServiceName": "Durable Task",
+    "URL": ""
+  },
+  {
     "Command": "az edgeorder",
     "AzureServiceName": "Edge Order",
     "URL": "https://review.learn.microsoft.com/azure/azure-edge-hardware-center"
@@ -301,8 +306,8 @@
   },
   {
     "Command": "az healthcareapis",
-    "AzureServiceName": "API for FHIR",
-    "URL": "https://learn.microsoft.com/azure/healthcare-apis/overview"
+    "AzureServiceName": "Health Data Services",
+    "URL": "https://learn.microsoft.com/azure/healthcare-apis/healthcare-apis-overview"
   },
   {
     "Command": "az hpc-cache",
@@ -423,6 +428,11 @@
     "Command": "az mysql",
     "AzureServiceName": "Database for MySQL",
     "URL": "https://learn.microsoft.com/azure/mysql"
+  },
+  {
+    "Command": "az neon",
+    "AzureServiceName": "Neon",
+    "URL": "https://learn.microsoft.com/en-us/azure/partner-solutions"
   },
   {
     "Command": "az network",
@@ -610,6 +620,11 @@
     "URL": "https://azure.microsoft.com/support/options"
   },
   {
+    "Command": "az terraform",
+    "AzureServiceName": "AzureTerraform",
+    "URL": ""
+  },
+  {
     "Command": "az trustedsigning",
     "AzureServiceName": "Trusted signing service",
     "URL": "https://learn.microsoft.com/en-us/azure/trusted-signing/"
@@ -673,11 +688,6 @@
     "Command": "az customlocation",
     "AzureServiceName": "Arc",
     "URL": "https://learn.microsoft.com/azure/azure-arc/kubernetes/conceptual-custom-locations"
-  },
-  {
-    "Command": "az vm-repair",
-    "AzureServiceName": "Virtual Machines",
-    "URL": "https://learn.microsoft.com/cli/azure/vm/repair"
   },
   {
     "Command": "az vm",
@@ -760,11 +770,6 @@
     "URL": "https://learn.microsoft.com/azure/cost-management-billing/reservations"
   },
   {
-    "Command": "az hybridaks",
-    "AzureServiceName": "Kubernetes Service (AKS)",
-    "URL": "https://learn.microsoft.com/azure-stack/aks-hci/aks-hybrid-preview-overview"
-  },
-  {
     "Command": "az akshybrid",
     "AzureServiceName": "Kubernetes Service (AKS)",
     "URL": "https://learn.microsoft.com/azure-stack/aks-hci/aks-hybrid-preview-overview"
@@ -778,11 +783,6 @@
     "Command": "az dynatrace",
     "AzureServiceName": "Dynatrace Observability",
     "URL": "https://learn.microsoft.com/azure/partner-solutions/dynatrace"
-  },
-  {
-    "Command": "az adp",
-    "AzureServiceName": "Autonomous Development Platform",
-    "URL": ""
   },
   {
     "Command": "az partnercenter",
@@ -855,11 +855,6 @@
     "URL": "https://learn.microsoft.com/en-us/azure/event-grid"
   },
   {
-    "Command": "az mariner-baremetal",
-    "AzureServiceName": "Mariner BareMetal Platform",
-    "URL": ""
-  },
-  {
     "Command": "az hdinsight-on-aks",
     "AzureServiceName": "HDInsight",
     "URL": "https://learn.microsoft.com/azure/hdinsightonaks"
@@ -898,5 +893,35 @@
     "Command": "az storage-actions",
     "AzureServiceName": "Azure Storage Actions",
     "URL": "https://learn.microsoft.com/azure/storage-actions/"
+  },
+  {
+    "Command": "az baremetalinstance",
+    "AzureServiceName": "BareMetal Infrastructure",
+    "URL": "https://learn.microsoft.com/en-us/azure/baremetal-infrastructure/"
+  },
+  {
+    "Command": "az baremetalstorageinstance",
+    "AzureServiceName": "BareMetal Infrastructure",
+    "URL": "https://learn.microsoft.com/en-us/azure/baremetal-infrastructure/"
+  },
+  {
+    "Command": "az fabric",
+    "AzureServiceName": "Microsoft Fabric",
+    "URL": "https://learn.microsoft.com/en-us/fabric/"
+  },
+  {
+    "Command": "az arc-multicloud",
+    "AzureServiceName": "Multi-cloud Connector",
+    "URL": "https://learn.microsoft.com/en-us/azure/azure-arc/multicloud-connector/"
+  },
+  {
+    "Command": "az mcc",
+    "AzureServiceName": "Microsoft Connected Cache",
+    "URL": ""
+  },
+  {
+    "Command": "az playwright-testing",
+    "AzureServiceName": "Playwright Testing",
+    "URL": "https://learn.microsoft.com/en-us/azure/playwright-testing/"
   }
 ]

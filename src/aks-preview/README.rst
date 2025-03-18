@@ -175,6 +175,15 @@ Released version and adopted API version
     * - 7.0.0b3 ~ 7.0.0b3
       - 2024-05-02-preview
       - 
-    * - 7.0.0b4 ~ latest
+    * - 7.0.0b4 ~ 9.0.0b1
       - 2024-06-02-preview
+      - 
+    * - 9.0.0b2 ~ 13.0.0b1
+      - 2024-07-02-preview
+      - 
+    * - 13.0.0b2 ~ 13.0.0b7
+      - 2024-09-02-preview
+      - 
+    * - 13.0.0b8 ~ latest
+      - 2024-10-02-preview
       - 
